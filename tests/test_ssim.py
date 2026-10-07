@@ -58,7 +58,7 @@ def test_is_symmetric(gray_image: NDArray[np.uint8], rng: np.random.Generator) -
 
 
 def test_map_shape_is_reduced_by_window(gray_image: NDArray[np.uint8]) -> None:
-    """valid モードなので、マップは窓の分だけ小さくなる。"""
+    """端を落とす valid モードなので、マップは窓の分だけ小さくなる。"""
     result = ssim_map(gray_image, gray_image, window_size=11)
 
     assert result.shape == (64 - 10, 64 - 10, 1)

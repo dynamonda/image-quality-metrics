@@ -18,10 +18,51 @@ build-backend = "uv_build"
 
 [dependency-groups]
 dev = [
+    "mypy>=2.4.0",
     "pytest>=9.1.1",
+    "ruff>=0.16.10",
 ]
 
 [tool.pytest.ini_options]
 testpaths = ["tests", "src"]
 # docstring 内の Examples も実行し、ドキュメントと実装のズレを防ぐ。
 addopts = "--doctest-modules"
+
+[tool.ruff.lint]
+select = [
+    "F",     # pyflakes: 未使用importや未定義名などの明確な誤り
+    "E",     # pycodestyle error
+    "W",     # pycodestyle warning
+    "I",     # isort: import順の統一
+    "N",     # pep8-naming: 命名規約
+    "UP",    # pyupgrade: 古い書き方の現代化
+    "ANN",   # 型注釈の欠落（py.typed を謳う以上は必須）
+    "B",     # bugbear: 典型的なバグの型
+    "A",     # builtin のシャドウイング
+    "C4",    # 内包表記の簡潔化
+    "PT",    # pytest の書き方
+    "RET",   # return 周りの冗長さ
+    "SIM",   # 簡潔に書ける箇所
+    "PTH",   # os.path より pathlib
+    "NPY",   # numpy 固有の非推奨API
+    "PL",    # pylint 由来の検査
+    "D",     # pydocstyle: docstring の体裁
+    "RUF",   # ruff 固有
+]
+ignore = [
+    "D105",    # マジックメソッドの docstring は必須としない
+    "D107",    # __init__ の docstring はクラス側に書く方針
+    "PLR0913", # 指標関数は調整用の引数が増えるため、引数数の上限は設けない
+    # 以下は docstring を日本語で書いていることによる誤検知。
+    "D415",    # 文末の「。」を終端記号と認識しない
+    "RUF002",  # 全角括弧などを「紛らわしいUnicode文字」と判定する
+    "RUF003",  # 同上（コメント内）
+]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.ruff.lint.per-file-ignores]
+# テストは関数名が仕様を表すため docstring を必須とせず、
+# マジックナンバー（期待値）の直書きも許容する。
+"tests/**" = ["D100", "D103", "PLR2004"]

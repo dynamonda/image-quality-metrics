@@ -51,8 +51,14 @@ def test_to_array_rejects_wrong_dimensions() -> None:
 
 
 def test_to_array_rejects_empty_image() -> None:
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match="空の画像"):
         to_array(np.zeros((0, 4)))
+
+
+def test_to_array_rejects_zero_channel_image() -> None:
+    """チャンネル数0も「空の画像」として弾く。"""
+    with pytest.raises(ValueError, match="空の画像"):
+        to_array(np.zeros((4, 4, 0)))
 
 
 def test_to_array_always_returns_float64() -> None:

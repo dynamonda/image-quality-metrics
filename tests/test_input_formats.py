@@ -40,7 +40,9 @@ def test_mixed_input_types(tmp_path: Path, gray_image: NDArray[np.uint8]) -> Non
     assert iqm.psnr(path, gray_image) == math.inf
 
 
-def test_png_roundtrip_is_lossless(tmp_path: Path, color_image: NDArray[np.uint8]) -> None:
+def test_png_roundtrip_is_lossless(
+    tmp_path: Path, color_image: NDArray[np.uint8]
+) -> None:
     """PNG は可逆圧縮なので、保存して読み直しても完全一致する。"""
     path = tmp_path / "image.png"
     Image.fromarray(color_image).save(path)

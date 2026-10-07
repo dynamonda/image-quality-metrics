@@ -44,7 +44,9 @@ def test_more_noise_lowers_score(
     assert psnr(base, light, data_range=255) > psnr(base, heavy, data_range=255)
 
 
-def test_scale_invariance(gray_image: NDArray[np.uint8], rng: np.random.Generator) -> None:
+def test_scale_invariance(
+    gray_image: NDArray[np.uint8], rng: np.random.Generator
+) -> None:
     """0-255 表現と 0-1 表現で同じスコアになる。"""
     reference = gray_image.astype(np.float64)
     test = np.clip(reference + rng.normal(0, 10, reference.shape), 0, 255)

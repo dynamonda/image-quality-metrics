@@ -139,7 +139,9 @@ def _ssim_single_plane(
     mean_test = filter_2d_valid(test, kernel)
 
     # 局所分散・共分散は E[X^2] - E[X]^2 の形で求める。
-    variance_reference = filter_2d_valid(reference * reference, kernel) - mean_reference**2
+    variance_reference = (
+        filter_2d_valid(reference * reference, kernel) - mean_reference**2
+    )
     variance_test = filter_2d_valid(test * test, kernel) - mean_test**2
     covariance = filter_2d_valid(reference * test, kernel) - mean_reference * mean_test
 

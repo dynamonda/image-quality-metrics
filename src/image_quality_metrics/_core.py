@@ -7,7 +7,7 @@
 from __future__ import annotations
 
 import os
-from typing import TYPE_CHECKING, TypeAlias
+from typing import TYPE_CHECKING
 
 import numpy as np
 from PIL import Image
@@ -16,11 +16,20 @@ if TYPE_CHECKING:
     from numpy.typing import NDArray
 
 # 利用者が画像として渡せるものの型。パス・PIL画像・numpy配列を受け付ける。
-ImageLike: TypeAlias = "str | os.PathLike[str] | Image.Image | NDArray[np.generic]"
+type ImageLike = str | os.PathLike[str] | Image.Image | NDArray[np.generic]
 
 # Pillow のモードのうち、そのまま配列化してよいもの。
 # これ以外（P, RGBA, CMYK など）は RGB に変換してから扱う。
 _PASSTHROUGH_MODES = frozenset({"L", "RGB", "I", "I;16", "F"})
+
+# 配列の次元数。(H, W) がグレースケール、(H, W, C) がマルチチャンネル。
+_NDIM_GRAYSCALE = 2
+_NDIM_COLOR = 3
+
+# ダイナミックレンジの推定に使う、各表現での最大値。
+_FLOAT_MAX = 1.0
+_UINT8_MAX = 255.0
+_UINT16_MAX = 65535.0
 
 
 def to_array(image: ImageLike) -> NDArray[np.float64]:
@@ -40,14 +49,13 @@ def to_array(image: ImageLike) -> NDArray[np.float64]:
             pil_image = pil_image.convert("RGB")
         array = np.asarray(pil_image)
 
-    if array.ndim not in (2, 3):
+    if array.ndim not in (_NDIM_GRAYSCALE, _NDIM_COLOR):
         raise ValueError(
-            f"画像は2次元 (H, W) か3次元 (H, W, C) である必要があります: ndim={array.ndim}"
+            "画像は2次元 (H, W) か3次元 (H, W, C) である必要があります: "
+            f"ndim={array.ndim}"
         )
-    if array.ndim == 3 and array.shape[2] == 0:
-        raise ValueError("チャンネル数が0の画像は扱えません")
     if array.size == 0:
-        raise ValueError("空の画像は扱えません")
+        raise ValueError(f"空の画像は扱えません: shape={array.shape}")
 
     return array.astype(np.float64, copy=False)
 
@@ -88,16 +96,16 @@ def resolve_data_range(
             "明示的に data_range を指定してください。"
         )
     # 0-1 に収まっていれば float 画像、それ以外は 8bit/16bit 整数画像とみなす。
-    if maximum <= 1.0:
-        return 1.0
-    if maximum <= 255.0:
-        return 255.0
-    return 65535.0
+    if maximum <= _FLOAT_MAX:
+        return _FLOAT_MAX
+    if maximum <= _UINT8_MAX:
+        return _UINT8_MAX
+    return _UINT16_MAX
 
 
 def as_channels(array: NDArray[np.float64]) -> NDArray[np.float64]:
     """``(H, W)`` を ``(H, W, 1)`` に揃え、チャンネル単位の処理を書きやすくする。"""
-    if array.ndim == 2:
+    if array.ndim == _NDIM_GRAYSCALE:
         return array[:, :, np.newaxis]
     return array
 
