@@ -19,7 +19,19 @@ jobs:
       - name: Install dependencies
         run: uv sync --locked
 
+      - name: Lint
+        run: uv run ruff check .
+
+      # 整形を適用せず、差分があれば失敗させる。
+      - name: Check formatting
+        run: uv run ruff format --check .
+
+      - name: Type check
+        run: uv run mypy
+
+      # 整形や型の問題で落ちてもテスト結果は知りたいので、前段が失敗しても実行する。
       - name: Run tests
+        if: ${{ !cancelled() }}
         run: uv run pytest
 
       # 配布物が壊れていないか（py.typed の同梱漏れなど）も確認する。

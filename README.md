@@ -71,10 +71,16 @@ full-reference は「劣化のない基準画像」が必要な指標です。�
 ## 開発
 
 ```bash
-uv sync              # 依存をインストール
-uv run pytest        # テスト（docstring の Examples も実行される）
-uv build             # dist/ に配布物を生成
+uv sync                      # 依存をインストール
+uv run pytest                # テスト（docstring の Examples も実行される）
+uv run ruff check . --fix    # リント（--fix で自動修正）
+uv run ruff format .         # 整形
+uv run mypy                  # 型チェック（strict）
+uv build                     # dist/ に配布物を生成
 ```
+
+これらはすべて CI でも実行されます。整形は `ruff format --check` で検査されるため、
+コミット前に `uv run ruff format .` を通してください。
 
 ### 指標を追加する手順
 
