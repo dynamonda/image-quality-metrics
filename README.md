@@ -97,4 +97,4 @@ no-reference 指標（NIQE, BRISQUE など）や分布系の指標（FID など�
 
 ## ライセンス
 
-未定。
+[MIT License](LICENSE)
