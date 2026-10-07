@@ -20,3 +20,8 @@ build-backend = "uv_build"
 dev = [
     "pytest>=9.1.1",
 ]
+
+[tool.pytest.ini_options]
+testpaths = ["tests", "src"]
+# docstring 内の Examples も実行し、ドキュメントと実装のズレを防ぐ。
+addopts = "--doctest-modules"

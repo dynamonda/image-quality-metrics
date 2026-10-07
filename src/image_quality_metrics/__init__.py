@@ -7,6 +7,8 @@
 
 from __future__ import annotations
 
+from image_quality_metrics._core import ImageLike
+
 __version__ = "0.1.0"
 
-__all__ = ["__version__"]
+__all__ = ["ImageLike", "__version__"]
