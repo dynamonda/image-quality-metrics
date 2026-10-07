@@ -109,8 +109,11 @@ def as_channels(array: NDArray[np.float64]) -> NDArray[np.float64]:
 def gaussian_kernel_1d(sigma: float, radius: int) -> NDArray[np.float64]:
     """正規化された1次元ガウシアンカーネルを返す。"""
     offsets = np.arange(-radius, radius + 1, dtype=np.float64)
-    kernel = np.exp(-(offsets**2) / (2.0 * sigma**2))
-    return kernel / kernel.sum()
+    # np.exp の戻り値は numpy のスタブ上 Any になるため、ここで型を確定させる。
+    kernel: NDArray[np.float64] = np.exp(-(offsets**2) / (2.0 * sigma**2))
+    # 重みの総和を1にする。そうしないとフィルタが画像の明るさを変えてしまう。
+    kernel /= kernel.sum()
+    return kernel
 
 
 def filter_2d_valid(

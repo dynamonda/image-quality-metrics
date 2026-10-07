@@ -28,6 +28,14 @@ testpaths = ["tests", "src"]
 # docstring 内の Examples も実行し、ドキュメントと実装のズレを防ぐ。
 addopts = "--doctest-modules"
 
+[tool.mypy]
+python_version = "3.13"
+files = ["src", "tests"]
+strict = true
+# 型注釈の誤りをエラー文の中で指摘できるよう、どこで何が起きたか分かるようにする。
+pretty = true
+show_error_codes = true
+
 [tool.ruff.format]
 # docstring 内のコード例も整形対象にし、Examples の体裁を揃える。
 docstring-code-format = true
