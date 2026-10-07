@@ -77,13 +77,10 @@ def evaluate(
     unknown = [name for name in requested if name not in _FULL_REFERENCE_METRICS]
     if unknown:
         raise ValueError(
-            f"未知の指標です: {unknown}。"
-            f"利用できる指標: {list(available_metrics())}"
+            f"未知の指標です: {unknown}。利用できる指標: {list(available_metrics())}"
         )
 
     return {
-        name: _FULL_REFERENCE_METRICS[name](
-            reference, test, data_range=data_range
-        )
+        name: _FULL_REFERENCE_METRICS[name](reference, test, data_range=data_range)
         for name in requested
     }

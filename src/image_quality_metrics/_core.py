@@ -60,9 +60,7 @@ def to_array(image: ImageLike) -> NDArray[np.float64]:
     return array.astype(np.float64, copy=False)
 
 
-def check_same_shape(
-    reference: NDArray[np.float64], test: NDArray[np.float64]
-) -> None:
+def check_same_shape(reference: NDArray[np.float64], test: NDArray[np.float64]) -> None:
     """2枚の画像の形が一致しているか検証する。
 
     PSNR や SSIM のような full-reference 指標は、画素を1対1で比較するため
@@ -75,9 +73,7 @@ def check_same_shape(
         )
 
 
-def resolve_data_range(
-    data_range: float | None, *images: NDArray[np.float64]
-) -> float:
+def resolve_data_range(data_range: float | None, *images: NDArray[np.float64]) -> float:
     """画素値が取り得る範囲（ダイナミックレンジ）を決める。
 
     PSNR/SSIM は「取り得る最大値」を基準に正規化するため、この値が

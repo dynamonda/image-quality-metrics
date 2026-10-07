@@ -14,8 +14,8 @@ uv add git+https://github.com/dynamonda/image-quality-metrics
 import image_quality_metrics as iqm
 
 # 個別に計測する
-iqm.psnr("original.png", "compressed.png")   # -> 31.24...
-iqm.ssim("original.png", "compressed.png")   # -> 0.9412...
+iqm.psnr("original.png", "compressed.png")  # -> 31.24...
+iqm.ssim("original.png", "compressed.png")  # -> 0.9412...
 
 # まとめて計測する
 iqm.evaluate("original.png", "compressed.png")
@@ -54,7 +54,7 @@ PSNR / SSIM は「画素値が取り得る最大値」を基準に正規化す�
 意図した推定にならない場合（暗い画像、12bit RAW など）は明示してください。
 
 ```python
-iqm.psnr(reference, test, data_range=4095)   # 12bit
+iqm.psnr(reference, test, data_range=4095)  # 12bit
 ```
 
 負の画素値を含む場合は推定できないため、`data_range` の指定が必須です。
