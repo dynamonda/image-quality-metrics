@@ -1,17 +1,22 @@
 [project]
 name = "image-quality-metrics"
 version = "0.1.0"
-description = "Add your description here"
+description = "画像の品質評価指標を簡単に計測するライブラリ"
 readme = "README.md"
 authors = [
     { name = "dynamonda", email = "v7gj9kk@gmail.com" }
 ]
 requires-python = ">=3.13"
-dependencies = []
-
-[project.scripts]
-image-quality-metrics = "image_quality_metrics:main"
+dependencies = [
+    "numpy>=2.5.3",
+    "pillow>=12.3.0",
+]
 
 [build-system]
 requires = ["uv_build>=0.12.18,<0.13.0"]
 build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "pytest>=9.1.1",
+]
