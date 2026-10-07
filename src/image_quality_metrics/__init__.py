@@ -9,7 +9,8 @@ from __future__ import annotations
 
 from image_quality_metrics._core import ImageLike
 from image_quality_metrics.metrics.psnr import psnr
+from image_quality_metrics.metrics.ssim import ssim, ssim_map
 
 __version__ = "0.1.0"
 
-__all__ = ["ImageLike", "__version__", "psnr"]
+__all__ = ["ImageLike", "__version__", "psnr", "ssim", "ssim_map"]

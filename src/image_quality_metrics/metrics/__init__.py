@@ -7,5 +7,6 @@
 from __future__ import annotations
 
 from image_quality_metrics.metrics.psnr import psnr
+from image_quality_metrics.metrics.ssim import ssim, ssim_map
 
-__all__ = ["psnr"]
+__all__ = ["psnr", "ssim", "ssim_map"]
