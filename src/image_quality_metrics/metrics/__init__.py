@@ -1,7 +1,7 @@
 """個々の指標の実装。1指標 = 1モジュール。
 
 新しい指標を追加するときは、このディレクトリに ``<指標名>.py`` を作り、
-``image_quality_metrics/evaluate.py`` の登録表と
+``image_quality_metrics/evaluate.py`` の登録表（種別に対応するもの）と
 ``image_quality_metrics/__init__.py`` の公開APIに追加する。
 """
 

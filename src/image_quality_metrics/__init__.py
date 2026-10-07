@@ -8,7 +8,12 @@
 from __future__ import annotations
 
 from image_quality_metrics._core import ImageLike
-from image_quality_metrics.evaluate import available_metrics, evaluate
+from image_quality_metrics.evaluate import (
+    available_metrics,
+    available_no_reference_metrics,
+    evaluate,
+    evaluate_no_reference,
+)
 from image_quality_metrics.metrics.psnr import psnr
 from image_quality_metrics.metrics.ssim import ssim, ssim_map
 from image_quality_metrics.metrics.variance_of_laplacian import variance_of_laplacian
@@ -19,7 +24,9 @@ __all__ = [
     "ImageLike",
     "__version__",
     "available_metrics",
+    "available_no_reference_metrics",
     "evaluate",
+    "evaluate_no_reference",
     "psnr",
     "ssim",
     "ssim_map",
