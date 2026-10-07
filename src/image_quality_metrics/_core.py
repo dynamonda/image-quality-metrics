@@ -31,6 +31,11 @@ _FLOAT_MAX = 1.0
 _UINT8_MAX = 255.0
 _UINT16_MAX = 65535.0
 
+# ITU-R BT.601 の輝度係数。Pillow の convert("L") と同じ重み。
+_LUMA_WEIGHTS_BT601 = (0.299, 0.587, 0.114)
+_RGB_CHANNELS = 3
+_RGBA_CHANNELS = 4
+
 
 def to_array(image: ImageLike) -> NDArray[np.float64]:
     """任意の入力を ``float64`` の配列 ``(H, W)`` / ``(H, W, C)`` に正規化する。
@@ -106,6 +111,34 @@ def as_channels(array: NDArray[np.float64]) -> NDArray[np.float64]:
     return array
 
 
+def to_luminance(array: NDArray[np.float64]) -> NDArray[np.float64]:
+    """カラー画像を輝度1枚 ``(H, W)`` にまとめる。
+
+    SSIM のようにチャンネルごとに計算して平均する指標と違い、鮮鋭度を測る
+    指標は「明るさの変化」を見るため、先に輝度へ落としてから1枚として扱う。
+
+    アルファチャンネルは無視する（透明度は明るさの情報ではないため）。
+
+    Raises:
+        ValueError: チャンネル数が 1 / 3 / 4 のいずれでもない場合。
+    """
+    if array.ndim == _NDIM_GRAYSCALE:
+        return array
+
+    channels = array.shape[2]
+    if channels == 1:
+        return array[:, :, 0]
+    if channels in (_RGB_CHANNELS, _RGBA_CHANNELS):
+        weights = np.array(_LUMA_WEIGHTS_BT601, dtype=np.float64)
+        luminance: NDArray[np.float64] = array[:, :, :_RGB_CHANNELS] @ weights
+        return luminance
+
+    raise ValueError(
+        "輝度に変換できるのはチャンネル数が 1 (グレースケール) / "
+        f"3 (RGB) / 4 (RGBA) の画像のみです: channels={channels}"
+    )
+
+
 def gaussian_kernel_1d(sigma: float, radius: int) -> NDArray[np.float64]:
     """正規化された1次元ガウシアンカーネルを返す。"""
     offsets = np.arange(-radius, radius + 1, dtype=np.float64)
@@ -133,3 +166,25 @@ def filter_2d_valid(
         horizontal, kernel_1d.size, axis=-2
     )
     return windows @ kernel_1d
+
+
+def correlate_2d_valid(
+    plane: NDArray[np.float64], kernel_2d: NDArray[np.float64]
+) -> NDArray[np.float64]:
+    """2次元画像に任意の2次元カーネルを ``valid`` モードで相関させる。
+
+    :func:`filter_2d_valid` は1次元に分解できるカーネル専用。ラプラシアンの
+    ように分解できないカーネルはこちらを使う。
+
+    カーネルを反転しない相関（convolution ではなく correlation）なので、
+    非対称なカーネルでは畳み込みと結果が異なる。ラプラシアンは点対称なので
+    どちらでも同じ。
+
+    Returns:
+        形 ``(H - kh + 1, W - kw + 1)`` の応答。
+    """
+    windows = np.lib.stride_tricks.sliding_window_view(plane, kernel_2d.shape)
+    response: NDArray[np.float64] = np.tensordot(
+        windows, kernel_2d, axes=((-2, -1), (0, 1))
+    )
+    return response
