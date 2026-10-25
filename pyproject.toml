@@ -14,6 +14,9 @@ dependencies = [
     "pillow>=12.3.0",
 ]
 
+[project.scripts]
+iqm = "image_quality_metrics.cli:main"
+
 [build-system]
 requires = ["uv_build>=0.12.18,<0.13.0"]
 build-backend = "uv_build"
@@ -69,7 +72,8 @@ ignore = [
     "PLR0913", # 指標関数は調整用の引数が増えるため、引数数の上限は設けない
     # 以下は docstring を日本語で書いていることによる誤検知。
     "D415",    # 文末の「。」を終端記号と認識しない
-    "RUF002",  # 全角括弧などを「紛らわしいUnicode文字」と判定する
+    "RUF001",  # 全角括弧などを「紛らわしいUnicode文字」と判定する（文字列内）
+    "RUF002",  # 同上（docstring 内）
     "RUF003",  # 同上（コメント内）
 ]
 

@@ -80,6 +80,24 @@ iqm.psnr(reference, test, data_range=4095)  # 12bit
 
 負の画素値を含む場合は推定できないため、`data_range` の指定が必須です。
 
+### コマンドラインから使う
+
+`iqm` コマンドで計測できます。2枚渡すと1枚目を基準に比較し、1枚だけなら単体で評価します。
+
+```bash
+# インストールせずに実行する
+uvx --from git+https://github.com/dynamonda/image-quality-metrics iqm original.png compressed.jpg
+# psnr  29.6720
+# ssim  0.8894
+
+# このリポジトリ内なら
+uv run iqm photo.jpg
+# variance_of_laplacian  202.5176
+
+uv run iqm original.png compressed.jpg --metrics ssim   # 指標を選ぶ（カンマ区切り）
+uv run iqm raw_a.tiff raw_b.tiff --data-range 4095      # ダイナミックレンジを指定する
+```
+
 ### 実行できる使用例
 
 [`examples/`](examples/) に、そのまま実行できるスクリプトを置いています（JPEG 品質の比較、最も鮮明な画像の選択、SSIM マップの可視化）。
