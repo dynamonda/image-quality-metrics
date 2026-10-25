@@ -34,6 +34,14 @@ jobs:
         if: ${{ !cancelled() }}
         run: uv run pytest
 
+      # 使用例が API の変更に追従できているか確認する。
+      - name: Run examples
+        if: ${{ !cancelled() }}
+        run: |
+          for example in examples/compare_jpeg_quality.py examples/pick_sharpest.py examples/ssim_heatmap.py; do
+            uv run python "$example"
+          done
+
       # 配布物が壊れていないか（py.typed の同梱漏れなど）も確認する。
       - name: Build distribution
         run: uv build
