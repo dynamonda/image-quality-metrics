@@ -8,3 +8,6 @@ wheels/
 
 # Virtual environments
 .venv
+
+# 使用例の出力
+examples/output/

@@ -32,7 +32,7 @@ addopts = "--doctest-modules"
 
 [tool.mypy]
 python_version = "3.13"
-files = ["src", "tests"]
+files = ["src", "tests", "examples"]
 strict = true
 # 型注釈の誤りをエラー文の中で指摘できるよう、どこで何が起きたか分かるようにする。
 pretty = true
